@@ -37,4 +37,54 @@ public class CalendarApiController {
     }
 
     // add other methods
+    @GetMapping("/firstDayOfYear/{year}")
+    public ResponseEntity<JsonNode> getFirstDayOfYear(@PathVariable int year) throws JsonMappingException, JsonProcessingException {
+      // Backend Year Object
+      Year year_obj = new Year();
+      year_obj.setYear(year);  // evaluates Leap Year
+
+      // Turn Year Object into JSON
+      ObjectMapper mapper = new ObjectMapper(); 
+      JsonNode json = mapper.readTree(year_obj.firstDayOfYearToString()); // this requires exception handling
+
+      return ResponseEntity.ok(json);  // JSON response, see ExceptionHandlerAdvice for throws
+    }
+
+    @GetMapping("/dayOfYear/{year}/{month}/{day}")
+    public ResponseEntity<JsonNode> getDayOfYear(@PathVariable int year, @PathVariable int month, @PathVariable int day) throws JsonMappingException, JsonProcessingException {
+      // Backend Year Object
+      Year year_obj = new Year();
+      year_obj.setDate(year, month, day);
+
+      // Turn Year Object into JSON
+      ObjectMapper mapper = new ObjectMapper(); 
+      JsonNode json = mapper.readTree(year_obj.dayOfYearToString()); // this requires exception handling
+
+      return ResponseEntity.ok(json);  // JSON response, see ExceptionHandlerAdvice for throws
+    }
+
+    @GetMapping("/dayOfWeek/{year}/{month}/{day}")
+    public ResponseEntity<JsonNode> getDayOfWeek(@PathVariable int year, @PathVariable int month, @PathVariable int day) throws JsonMappingException, JsonProcessingException {
+      // Backend Year Object
+      Year year_obj = new Year();
+      year_obj.setDate(year, month, day);
+
+      // Turn Year Object into JSON
+      ObjectMapper mapper = new ObjectMapper(); 
+      JsonNode json = mapper.readTree(year_obj.dayOfWeekToString()); // this requires exception handling
+
+      return ResponseEntity.ok(json);  // JSON response, see ExceptionHandlerAdvice for throws
+    }
+
+    @GetMapping("/leapYears/{year1}/{year2}")
+    public ResponseEntity<JsonNode> getNumberOfLeapYears(@PathVariable int year1, @PathVariable int year2) throws JsonMappingException, JsonProcessingException {
+      // Backend Year Object
+      Year year_obj = new Year();
+
+      // Turn Year Object into JSON
+      ObjectMapper mapper = new ObjectMapper(); 
+      JsonNode json = mapper.readTree(year_obj.leapYearsToString(year1, year2)); // this requires exception handling
+
+      return ResponseEntity.ok(json);  // JSON response, see ExceptionHandlerAdvice for throws
+    }
 }
