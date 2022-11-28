@@ -66,11 +66,9 @@ public class Person {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dob;
 
-    @NotEmpty
-    private Float height;
+    private int height;
     
-    @NotEmpty
-    private Float weight; 
+    private int weight; 
     
 
     /* HashMap is used to store JSON for daily "stats"
@@ -87,7 +85,7 @@ public class Person {
     
 
     // Constructor used when building object from an API
-    public Person(String email, String password, String name, Date dob, Float height, Float weight) {
+    public Person(String email, String password, String name, Date dob, int height, int weight) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -105,9 +103,13 @@ public class Person {
     }
 
     // BMI Formula: weight (lb) / [height (in)]^2 x 703
-    public Float getBMI() {
-        Float BMI = (this.weight / (this.height * this.height)) * 703.0f;
+    private int getBMI() {
+        int BMI = (int)(703.0f * this.weight / (this.height * this.height));
         return BMI;
+    }
+
+    public String getBMItoString() {
+        return ("{ \"Name\": " + this.name + " ," + "\"BMI\": " + this.getBMI() + " }" );
     }
 
     public String toString(){
@@ -126,7 +128,7 @@ public class Person {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-dd-MM");      
         //Parsing the given String to Date object
         Date myDate = formatter.parse("2006-19-05"); 
-        Person argPerson = new Person ("shreya0519@gmail.com",  "milo", "Shreya Ahuja", myDate, 63.0f, 100.0f);
+        Person argPerson = new Person ("shreya0519@gmail.com",  "milo", "Shreya Ahuja", myDate, 63, 100);
         System.out.println(argPerson);
 
         System.out.println("BMI: " + argPerson.getBMI());

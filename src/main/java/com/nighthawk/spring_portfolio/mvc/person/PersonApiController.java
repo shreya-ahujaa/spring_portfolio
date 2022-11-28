@@ -65,7 +65,9 @@ public class PersonApiController {
     public ResponseEntity<Object> postPerson(@RequestParam("email") String email,
                                              @RequestParam("password") String password,
                                              @RequestParam("name") String name,
-                                             @RequestParam("dob") String dobString) {
+                                             @RequestParam("dob") String dobString,
+                                             @RequestParam("height") int height,
+                                             @RequestParam("weight") int weight) {
         Date dob;
         try {
             dob = new SimpleDateFormat("MM-dd-yyyy").parse(dobString);
@@ -73,10 +75,11 @@ public class PersonApiController {
             return new ResponseEntity<>(dobString +" error; try MM-dd-yyyy", HttpStatus.BAD_REQUEST);
         }
         // A person object WITHOUT ID will create a new record with default roles as student
-        Person person = new Person(email, password, name, dob);
+        Person person = new Person(email, password, name, dob, height, weight);
         repository.save(person);
         return new ResponseEntity<>(email +" is created successfully", HttpStatus.CREATED);
     }
+
 
     /*
     The personSearch API looks across database for partial match to term (k,v) passed by RequestEntity body
@@ -91,6 +94,17 @@ public class PersonApiController {
 
         // return resulting list and status, error checking should be added
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/getBMI/{id}")
+    public String getBMI (@PathVariable long id) {
+        Optional<Person> optional = repository.findById(id);
+        if (optional.isPresent()) {  // Good ID
+            Person person = optional.get();  // value from findByID
+            return person.getBMItoString();  // OK HTTP response: status code, headers, and body
+        }
+        // Bad ID
+        return "Person with ID not found";       
     }
 
     /*
