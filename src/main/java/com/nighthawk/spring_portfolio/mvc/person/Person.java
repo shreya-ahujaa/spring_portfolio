@@ -69,6 +69,8 @@ public class Person {
     private int height;
     
     private int weight; 
+
+    private String gender;
     
 
     /* HashMap is used to store JSON for daily "stats"
@@ -85,13 +87,14 @@ public class Person {
     
 
     // Constructor used when building object from an API
-    public Person(String email, String password, String name, Date dob, int height, int weight) {
+    public Person(String email, String password, String name, Date dob, int height, int weight, String gender) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.dob = dob;
         this.height = height;
         this.weight = weight;
+        this.gender = gender;
     }
 
     // A custom getter to return age from dob attribute
@@ -108,12 +111,42 @@ public class Person {
         return BMI;
     }
 
+    // BMR = Basal Metabolic Rate
+    public double BMRCalculator() {
+        if (getGender().equals("male")) {
+            return 88.362 + (13.397 * getWeight() / 2.205) + (4.799 * getHeight() * 2.54) - (5.677 * getAge());
+        } else if (getGender().equals("female")) {
+            return 447.593 + (9.247 * getWeight() / 2.205) + (3.098 * getHeight() * 2.54) - (4.330 * getAge());
+        } else {
+            return -1;
+        }
+    }
+
+    // AMR = Active Metabolic Rate
+    public double AMRCalculator() {
+        return BMRCalculator() * 1.50;
+    }
+
+    // Calories required to burn per day to maintain current weight (Uses Active & Basal Metabolic Rate)
+    public int getStepGoal() {
+        if (getDob() != null && getWeight() != 0 && getHeight() != 0) {
+            // assumes moderate exercise each day, indicates calories needed to burn
+            return (int) (Math.round(AMRCalculator() - BMRCalculator() - 500) / 0.04);
+        }
+
+        return -1;
+    }
+
     public String getBMItoString() {
         return ("{ \"Name\": " + this.name + " ," + "\"BMI\": " + this.getBMI() + " }" );
     }
 
+    public String getStepGoalToString() {
+        return("{ \"step\": " + this.getStepGoal() + "}");
+    }
+    
     public String toString(){
-        return ("{ \"id\": " + this.id + ", " + "\"email\": " + this.email + ", " + "\"password\": " + this.password + ", " + "\"name\": " + this.name + ", " + "\"dob\": " + this.dob + ", " + "\"height\": " + this.height + ", " + "\"weight\": " + this.weight + "}" );
+        return ("{ \"id\": " + this.id + ", " + "\"email\": " + this.email + ", " + "\"password\": " + this.password + ", " + "\"name\": " + this.name + ", " + "\"dob\": " + this.dob + ", " + "\"height\": " + this.height + ", " + "\"weight\": " + this.weight + ", " + "\"gender\": " + this.gender + "}" );
     }
 
 
@@ -128,11 +161,13 @@ public class Person {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-dd-MM");      
         //Parsing the given String to Date object
         Date myDate = formatter.parse("2006-19-05"); 
-        Person argPerson = new Person ("shreya0519@gmail.com",  "milo", "Shreya Ahuja", myDate, 63, 100);
+        Person argPerson = new Person ("shreya0519@gmail.com",  "milo", "Shreya Ahuja", myDate, 63, 100, "female");
         System.out.println(argPerson);
 
         System.out.println("BMI: " + argPerson.getBMI());
     }
+
+
 
 }
 
