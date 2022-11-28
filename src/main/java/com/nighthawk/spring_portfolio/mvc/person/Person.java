@@ -65,6 +65,12 @@ public class Person {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dob;
+
+    @NotEmpty
+    private Float height;
+    
+    @NotEmpty
+    private Float weight; 
     
 
     /* HashMap is used to store JSON for daily "stats"
@@ -81,11 +87,13 @@ public class Person {
     
 
     // Constructor used when building object from an API
-    public Person(String email, String password, String name, Date dob) {
+    public Person(String email, String password, String name, Date dob, Float height, Float weight) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.dob = dob;
+        this.height = height;
+        this.weight = weight;
     }
 
     // A custom getter to return age from dob attribute
@@ -96,8 +104,14 @@ public class Person {
         return -1;
     }
 
+    // BMI Formula: weight (lb) / [height (in)]^2 x 703
+    public Float getBMI() {
+        Float BMI = (this.weight / (this.height * this.height)) * 703.0f;
+        return BMI;
+    }
+
     public String toString(){
-        return ("{ \"email\": " + this.email + ", " + "\"password\": " + this.password + ", " + "\"name\": " + this.name + ", " + "\"dob\": " + this.dob + " }" );
+        return ("{ \"id\": " + this.id + ", " + "\"email\": " + this.email + ", " + "\"password\": " + this.password + ", " + "\"name\": " + this.name + ", " + "\"dob\": " + this.dob + ", " + "\"height\": " + this.height + ", " + "\"weight\": " + this.weight + "}" );
     }
 
 
@@ -112,8 +126,10 @@ public class Person {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-dd-MM");      
         //Parsing the given String to Date object
         Date myDate = formatter.parse("2006-19-05"); 
-        Person argPerson = new Person ("shreya0519@gmail.com",  "milo", "Shreya Ahuja", myDate);
+        Person argPerson = new Person ("shreya0519@gmail.com",  "milo", "Shreya Ahuja", myDate, 63.0f, 100.0f);
         System.out.println(argPerson);
+
+        System.out.println("BMI: " + argPerson.getBMI());
     }
 
 }
