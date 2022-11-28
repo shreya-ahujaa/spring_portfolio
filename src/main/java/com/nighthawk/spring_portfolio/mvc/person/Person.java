@@ -6,6 +6,8 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -94,4 +96,26 @@ public class Person {
         return -1;
     }
 
+    public String toString(){
+        return ("{ \"email\": " + this.email + ", " + "\"password\": " + this.password + ", " + "\"name\": " + this.name + ", " + "\"dob\": " + this.dob + " }" );
+    }
+
+
+    public static void main(String[] args) throws ParseException {
+
+        // no arg constructor
+        Person noArgPerson = new Person ();
+        System.out.println (noArgPerson);
+
+        // testing all arg constructor
+        //Instantiating the SimpleDateFormat class
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-dd-MM");      
+        //Parsing the given String to Date object
+        Date myDate = formatter.parse("2006-19-05"); 
+        Person argPerson = new Person ("shreya0519@gmail.com",  "milo", "Shreya Ahuja", myDate);
+        System.out.println(argPerson);
+    }
+
 }
+
+
