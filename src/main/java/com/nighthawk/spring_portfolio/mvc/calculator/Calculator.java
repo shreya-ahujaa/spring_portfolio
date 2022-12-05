@@ -25,6 +25,7 @@ public class Calculator {
     private final Map<String, Integer> OPERATORS = new HashMap<>();
     {
         // Map<"token", precedence>
+        OPERATORS.put("^", 2);
         OPERATORS.put("*", 3);
         OPERATORS.put("/", 3);
         OPERATORS.put("%", 3);
@@ -135,6 +136,7 @@ public class Calculator {
                     }
                     tokenStack.pop();   
                     break;
+                case "^":
                 case "+":
                 case "-":
                 case "*":
@@ -190,6 +192,9 @@ public class Calculator {
 
                 // Calculate intermediate results
                 switch(token){
+                    case "^":
+                        result = Math.pow(operand2, operand1);
+                        break;
                     case "+":
                         result = operand2 + operand1;
                         break;
@@ -267,6 +272,12 @@ public class Calculator {
 
         Calculator divisionMath = new Calculator("300/200");
         System.out.println("Division Math\n" + divisionMath);
+
+        System.out.println();
+
+        Calculator powMath = new Calculator("2^3");
+        System.out.println("Division Math\n" + powMath);
+
 
         
     }
