@@ -19,6 +19,7 @@ public class Calculator {
     private ArrayList<String> tokens;
     private ArrayList<String> reverse_polish;
     private Double result = 0.0;
+    private boolean error = false;
 
     // Helper definition for supported operators
     private final Map<String, Integer> OPERATORS = new HashMap<>();
@@ -49,7 +50,10 @@ public class Calculator {
         this.termTokenizer();
 
         // place terms into reverse polish notation
-        this.tokensToReversePolishNotation();
+        if (false == this.tokensToReversePolishNotation()){
+            error = true;
+            return;
+        }
 
         // calculate reverse polish notation
         this.rpnToResult();
@@ -108,7 +112,7 @@ public class Calculator {
     }
 
     // Takes tokens and converts to Reverse Polish Notation (RPN), this is one where the operator follows its operands.
-    private void tokensToReversePolishNotation () {
+    private boolean tokensToReversePolishNotation () {
         // contains final list of tokens in RPN
         this.reverse_polish = new ArrayList<>();
 
@@ -124,8 +128,12 @@ public class Calculator {
                     while (tokenStack.peek() != null && !tokenStack.peek().equals("("))
                     {
                         reverse_polish.add( tokenStack.pop() );
+                        if (tokenStack.isEmpty()) {
+                            System.out.println("Error: Unbalanced Parenthesis Detected");
+                            return false;
+                        }
                     }
-                    tokenStack.pop();
+                    tokenStack.pop();   
                     break;
                 case "+":
                 case "-":
@@ -152,8 +160,14 @@ public class Calculator {
         }
         // Empty remaining tokens
         while (tokenStack.size() > 0) {
+            // If there is "(" in the tokenStack, there must be a mismatch in ()
+            if( tokenStack.peek().equals("(")) {
+                System.out.println("Error: Unbalanced Parenthesis Detected");
+                return false;
+            }
             reverse_polish.add(tokenStack.pop());
         }
+        return true;
 
     }
 
@@ -213,11 +227,23 @@ public class Calculator {
         return ("Original expression: " + this.expression + "\n" +
                 "Tokenized expression: " + this.tokens.toString() + "\n" +
                 "Reverse Polish Notation: " +this.reverse_polish.toString() + "\n" +
-                "Final result: " + String.format("%.2f", this.result));
+                "Final result: " + String.format("%.2f", this.result) + "\n" +
+                "Error: " + this.error);
     }
 
     // Tester method
     public static void main(String[] args) {
+
+        Calculator parenthesisMismatch1 = new Calculator("((300 * 2) + 3");
+        System.out.println("Parenthesis Check 1\n" + parenthesisMismatch1);
+
+        System.out.println();
+
+        Calculator parenthesisMismatch2 = new Calculator("(300 * 2) + 3)");
+        System.out.println("Parenthesis Check 2\n" + parenthesisMismatch2);
+
+        System.out.println();
+
         // Random set of test cases
         Calculator simpleMath = new Calculator("100 + 200  * 3");
         System.out.println("Simple Math\n" + simpleMath);
@@ -242,5 +268,6 @@ public class Calculator {
         Calculator divisionMath = new Calculator("300/200");
         System.out.println("Division Math\n" + divisionMath);
 
+        
     }
 }
