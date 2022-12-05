@@ -11,7 +11,7 @@ import java.util.Stack;
    In computers,
     expression can be hard to calculate with precedence rules and user input errors
     to handle computer math we often convert strings into reverse polish notation
-    to handle errors we perform try / catch or set default conditions to trap errors
+    to handle errors we perform try / catch or set default conditions to trap errorss
      */
 public class Calculator {
     // Key instance variables
@@ -25,6 +25,8 @@ public class Calculator {
     private final Map<String, Integer> OPERATORS = new HashMap<>();
     {
         // Map<"token", precedence>
+        OPERATORS.put("RT", 1);
+        OPERATORS.put("SQRT", 1);
         OPERATORS.put("^", 2);
         OPERATORS.put("*", 3);
         OPERATORS.put("/", 3);
@@ -136,6 +138,8 @@ public class Calculator {
                     }
                     tokenStack.pop();   
                     break;
+                case "RT":
+                case "SQRT":
                 case "^":
                 case "+":
                 case "-":
@@ -185,13 +189,22 @@ public class Calculator {
             // If the token is an operator, calculate
             if (isOperator(token))
             {
+                double operand2 = 0.0;
                 // Pop the two top entries
                 double operand1 = calcStack.pop();
-                double operand2 = calcStack.pop();
+                if (!token.equals("SQRT")){
+                    operand2 = calcStack.pop();
+                }
 
 
                 // Calculate intermediate results
                 switch(token){
+                    case "SQRT":
+                        result = Math.sqrt(operand1);
+                        break;
+                    case "RT":
+                        result = Math.pow(operand1, (1/operand2));
+                        break;
                     case "^":
                         result = Math.pow(operand2, operand1);
                         break;
@@ -229,11 +242,17 @@ public class Calculator {
 
     // Print the expression, terms, and result
     public String toString() {
-        return ("Original expression: " + this.expression + "\n" +
+        String retValue = "Original expression: " + this.expression + "\n" +
                 "Tokenized expression: " + this.tokens.toString() + "\n" +
-                "Reverse Polish Notation: " +this.reverse_polish.toString() + "\n" +
+                "Reverse Polish Notation: " + this.reverse_polish.toString() + "\n" +
                 "Final result: " + String.format("%.2f", this.result) + "\n" +
-                "Error: " + this.error);
+                "Error: " + this.error;
+                
+        if(error) {
+            retValue += " : Unbalanced Parenthesis Detected";
+        }
+
+        return retValue;
     }
 
     // Tester method
@@ -276,7 +295,17 @@ public class Calculator {
         System.out.println();
 
         Calculator powMath = new Calculator("2^3");
-        System.out.println("Division Math\n" + powMath);
+        System.out.println("Power Math\n" + powMath);
+
+        System.out.println();
+
+        Calculator rtMath = new Calculator("3 RT 8");
+        System.out.println("Root Math\n" + rtMath);
+
+        System.out.println();
+
+        Calculator sqrtMath = new Calculator("SQRT 9");
+        System.out.println("Square Root Math\n" + sqrtMath);
 
 
         
