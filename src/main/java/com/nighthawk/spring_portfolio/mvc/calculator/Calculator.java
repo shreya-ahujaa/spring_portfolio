@@ -170,9 +170,30 @@ public class Calculator {
             if (isOperator(token))
             {
                 // Pop the two top entries
+                double operand1 = calcStack.pop();
+                double operand2 = calcStack.pop();
+
 
                 // Calculate intermediate results
-                result = 0.0;
+                switch(token){
+                    case "+":
+                        result = operand2 + operand1;
+                        break;
+                    case "-":
+                        result = operand2 - operand1;
+                        break;
+                    case "*":
+                        result = operand2 * operand1;
+                        break; 
+                    case "/":
+                        result = operand2 / operand1;
+                        break;
+                    case "%":
+                        result = operand2 % operand1;
+                        break;
+                    default: 
+                        System.out.println("Error: Invalid Operator");
+                }
 
                 // Push intermediate result back onto the stack
                 calcStack.push( result );
