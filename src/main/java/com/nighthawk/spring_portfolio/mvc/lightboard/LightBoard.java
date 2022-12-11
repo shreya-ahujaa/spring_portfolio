@@ -19,6 +19,26 @@ public class LightBoard {
         }
     }
 
+    public void setBoardColor(int r, int g, int b) {
+        for (int row = 0; row < lights.length; row++) {
+            for (int col = 0; col < lights[row].length; col++) {
+                lights[row][col].setRGB(r, g, b);
+            }
+        }
+    }
+
+    public void randomizeBoard() {
+        for (int row = 0; row < lights.length; row++) {
+            for (int col = 0; col < lights[row].length; col++) {
+                lights[row][col].setRandomColor();
+            }
+        }
+    }
+
+    public void setCellColor(int row, int col, int r, int g, int b) {
+        lights[row][col].setRGB(r, g, b);
+    }
+
     /* Output is intended for API key/values */
     public String toString() { 
         String outString = "[";
@@ -130,12 +150,31 @@ public class LightBoard {
         int cellHeight = scanner.nextInt();
         System.out.println(cellHeight);
         
-        // close scanner
-        scanner.close();
 
         LightBoard lightBoard = new LightBoard(5, 5);
         System.out.println(lightBoard);  // use toString() method
         System.out.println(lightBoard.toTerminal());
         System.out.println(lightBoard.toColorPalette(cellWidth, cellHeight));
+
+        System.out.print("Choose Color of Board (Enter in Format - r g b): ");
+        int r = scanner.nextInt();
+        int g = scanner.nextInt();
+        int b = scanner.nextInt();
+
+        lightBoard.setBoardColor(r, g, b);
+        System.out.println(lightBoard.toColorPalette(cellWidth, cellHeight));
+
+
+        System.out.print("Randomize Board Colors Again? (0 = no / 1 = yes): ");
+        int answer = scanner.nextInt();
+        if (answer == 1){
+            lightBoard.randomizeBoard();
+            System.out.println(lightBoard.toColorPalette(cellWidth, cellHeight));
+        }
+        else 
+            System.out.println("Bye!");
+
+        // close scanner
+         scanner.close();
     }
 }
