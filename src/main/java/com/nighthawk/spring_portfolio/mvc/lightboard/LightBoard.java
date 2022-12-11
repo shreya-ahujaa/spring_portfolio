@@ -1,4 +1,6 @@
 package com.nighthawk.spring_portfolio.mvc.lightboard;
+import java.util.Scanner;
+
 
 import lombok.Data;
 
@@ -69,25 +71,23 @@ public class LightBoard {
     }
 
     /* Output is intended for Terminal, draws color palette */
-    public String toColorPalette() {
-        // block sizes
-        final int ROWS = 5;
-        final int COLS = 10;
+    public String toColorPalette(int cellWidth, int cellHeight) {
+
 
         // Build large string for entire color palette
         String outString = "";
         // find each row
         for (int row = 0; row < lights.length; row++) {
             // repeat each row for block size
-            for (int i = 0; i < ROWS; i++) {
+            for (int i = 0; i < cellHeight; i++) {
                 // find each column
                 for (int col = 0; col < lights[row].length; col++) {
                     // repeat each column for block size
-                    for (int j = 0; j < COLS; j++) {
+                    for (int j = 0; j < cellWidth; j++) {
                         // print single character, except at midpoint print color code
-                        String c = (i == (int) (ROWS / 2) && j == (int) (COLS / 2) ) 
+                        String c = (i == (int) (cellHeight / 2) && j == (int) (cellWidth / 2) ) 
                             ? lights[row][col].getRGB()
-                            : (j == (int) (COLS / 2))  // nested ternary
+                            : (j == (int) (cellWidth / 2))  // nested ternary
                             ? " ".repeat(lights[row][col].getRGB().length())
                             : " ";
 
@@ -118,10 +118,24 @@ public class LightBoard {
     }
     
     static public void main(String[] args) {
-        // create and display LightBoard
+        // initialize scanner 
+        Scanner scanner = new Scanner(System.in);
+
+        // take input
+        System.out.print("Enter Cell Width: ");
+        int cellWidth = scanner.nextInt();
+        System.out.println(cellWidth);
+
+        System.out.print("Enter Cell Height: ");
+        int cellHeight = scanner.nextInt();
+        System.out.println(cellHeight);
+        
+        // close scanner
+        scanner.close();
+
         LightBoard lightBoard = new LightBoard(5, 5);
         System.out.println(lightBoard);  // use toString() method
         System.out.println(lightBoard.toTerminal());
-        System.out.println(lightBoard.toColorPalette());
+        System.out.println(lightBoard.toColorPalette(cellWidth, cellHeight));
     }
 }
