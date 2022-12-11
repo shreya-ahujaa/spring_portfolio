@@ -43,12 +43,7 @@ public class Light {
 
     /* Assign random colors and effects */
     public Light() {
-        int maxColor = 255;
-        int effect = 9;
-        this.red = (short) (Math.random()*(maxColor+1));
-        this.green = (short) (Math.random()*(maxColor+1));
-        this.blue = (short) (Math.random()*(maxColor+1));
-        this.effect = (short) (Math.random()*(effect+1));
+        setRandomColor();
     }
 
     public String getEffectTitle() {
@@ -61,6 +56,21 @@ public class Light {
          String.format("%02X", this.green) + 
          String.format("%02X", this.blue) 
          );
+    }
+
+    public void setRGB(int r, int g, int b) {
+        this.red = (short)r;
+        this.green = (short)g;
+        this.blue = (short)b;
+    }
+
+    public void setRandomColor() {
+        int maxColor = 255;
+        int effect = 9;
+        this.red = (short) (Math.random()*(maxColor+1));
+        this.green = (short) (Math.random()*(maxColor+1));
+        this.blue = (short) (Math.random()*(maxColor+1));
+        this.effect = (short) (Math.random()*(effect+1));
     }
 
     /* toString output as key/values */
